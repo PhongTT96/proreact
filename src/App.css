@@ -1,20 +1,72 @@
+/* App Header */
+.app-header {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-bg) 100%);
+  color: white;
+  padding: 30px 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+/* App Wrapper */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 /* App Layout */
 .app-container {
   display: flex;
-  min-height: 100vh;
+  flex: 1;
 }
 
 .main-content {
   flex: 1;
+  overflow: auto;
 }
 
-/* Menu Styles */
+/* Hamburger Button (Hidden by default) */
+.hamburger-btn {
+  display: none;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background: var(--accent);
+  border: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  border-radius: 0 0 8px 0;
+}
+
+.hamburger-btn span {
+  width: 25px;
+  height: 3px;
+  background: white;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Menu Grid Styles */
 .menu {
   width: 250px;
-  background: var(--bg-nav, #f5f5f5);
+  background: var(--bg-nav, #f9f9f9);
   border-right: 1px solid var(--border);
-  padding: 20px 0;
-  height: 100vh;
+  padding: 20px;
+  height: auto;
   overflow-y: auto;
 }
 
@@ -22,6 +74,9 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
 }
 
 .menu-item {
@@ -30,28 +85,30 @@
 
 .menu-button {
   width: 100%;
-  padding: 12px 20px;
-  background: none;
-  border: none;
-  border-left: 3px solid transparent;
+  padding: 14px 16px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
   text-align: left;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text);
   transition: all 0.3s ease;
+  font-weight: 500;
 }
 
 .menu-button:hover {
-  background: var(--bg-hover, rgba(0, 0, 0, 0.05));
-  border-left-color: var(--accent);
+  background: var(--bg-hover, #f0f0f0);
+  border-color: var(--accent);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
 .menu-button.expanded {
-  border-left-color: var(--accent);
-  background: var(--bg-hover, rgba(0, 0, 0, 0.05));
+  border-color: var(--accent);
+  background: var(--accent-bg, rgba(0, 0, 0, 0.02));
 }
 
 .submenu-toggle {
@@ -65,17 +122,15 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  background: var(--bg-submenu, rgba(0, 0, 0, 0.02));
+  background: transparent;
 }
 
 .level-1 .menu-button {
-  padding-left: 40px;
-  font-size: 14px;
+  padding: 12px 14px;
+  font-size: 13px;
   color: var(--text-secondary, #666);
-}
-
-.level-1 .menu-button:hover {
-  background: var(--bg-hover-secondary, rgba(0, 0, 0, 0.08));
+  background: var(--bg-submenu, #fafafa);
+  border-color: var(--border);
 }
 
 .counter {
@@ -331,47 +386,157 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
+  /* Show hamburger button */
+  .hamburger-btn {
+    display: flex;
+    top: 80px;
+    left: 0;
   }
 
+  /* App layout - stack vertically */
+  .app-wrapper {
+    min-height: 100vh;
+  }
+
+  .app-container {
+    flex-direction: column;
+    flex: 1;
+  }
+
+  /* Header adjustments */
+  .app-header {
+    padding: 20px 16px;
+  }
+
+  .app-header h1 {
+    font-size: 24px;
+  }
+
+  /* Menu - sidebar style (fixed overlay) */
   .menu {
-    width: 100%;
-    height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding: 10px 0;
+    width: 70vw;
+    height: calc(100vh - 80px);
+    position: fixed;
+    left: 0;
+    top: 80px;
+    z-index: 999;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 16px;
+  }
+
+  .menu.open {
+    transform: translateX(0);
   }
 
   .menu-list {
-    display: flex;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
-  .menu-item {
-    flex: 1 1 auto;
+  /* Main content - add padding for header */
+  .main-content {
+    padding-top: 0;
+    overflow-y: auto;
+  }
+
+  /* Menu styling adjustments for mobile */
+  .menu-button {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+
+  .level-1 .menu-button {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  /* Page content adjustments */
+  .page-content {
+    padding: 30px 16px;
+  }
+
+  .page-header {
+    padding: 16px;
+    gap: 12px;
+    margin-top: 0;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+  }
+
+  .back-btn {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .page-content p {
+    font-size: 15px;
+  }
+
+  .page-content ul {
+    margin: 16px 0;
+    padding-left: 18px;
+  }
+
+  .page-content li {
+    font-size: 14px;
+    margin: 6px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .hamburger-btn {
+    width: 45px;
+    height: 45px;
+    top: 75px;
+  }
+
+  .menu {
+    width: 80vw;
+    top: 75px;
+    height: calc(100vh - 75px);
+    padding: 12px;
+  }
+
+  .app-header {
+    padding: 16px 12px;
+  }
+
+  .app-header h1 {
+    font-size: 20px;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .page-header h1 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .page-content {
+    padding: 20px 12px;
+  }
+
+  .page-content p {
+    font-size: 14px;
+  }
+
+  .menu-list {
+    gap: 8px;
   }
 
   .menu-button {
-    padding: 10px 15px;
+    padding: 10px 12px;
     font-size: 13px;
-    border-left: none;
-    border-bottom: 2px solid transparent;
-  }
-
-  .menu-button:hover,
-  .menu-button.expanded {
-    border-left: none;
-    border-bottom-color: var(--accent);
-    background: var(--bg-hover, rgba(0, 0, 0, 0.05));
-  }
-
-  .submenu {
-    display: none;
-  }
-
-  .menu-item.level-1 {
-    display: none;
   }
 }
 

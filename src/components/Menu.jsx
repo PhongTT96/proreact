@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 export function Menu({ items, onMenuClick }) {
   const [expandedMenus, setExpandedMenus] = useState({})
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const toggleSubmenu = (id) => {
     setExpandedMenus(prev => ({
@@ -15,6 +16,7 @@ export function Menu({ items, onMenuClick }) {
       toggleSubmenu(item.id)
     } else if (item.page) {
       onMenuClick(item.page)
+      setMobileMenuOpen(false) // Close menu on page select (mobile)
     }
   }
 
@@ -40,10 +42,21 @@ export function Menu({ items, onMenuClick }) {
   )
 
   return (
-    <nav className="menu">
-      <ul className="menu-list">
-        {items.map(item => renderMenuItem(item))}
-      </ul>
-    </nav>
+    <>
+      {/* Hamburger button (mobile only) */}
+      <button className="hamburger-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Menu */}
+      <nav className={`menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <ul className="menu-list">
+          {items.map(item => renderMenuItem(item))}
+        </ul>
+      </nav>
+    </>
   )
 }
+

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import { Header } from './components/Header'
 import { Menu } from './components/Menu'
 import { menuData } from './data/menus'
 import { HomePage } from './pages/HomePage'
@@ -29,11 +30,14 @@ function App() {
   }
 
   return (
-    <div className="app-container">
-      <Menu items={menuData} onMenuClick={setCurrentPage} />
-      <main className="main-content">
-        {renderPage()}
-      </main>
+    <div className="app-wrapper">
+      <Header />
+      <div className="app-container">
+        <Menu items={menuData} onMenuClick={setCurrentPage} />
+        <main className="main-content">
+          {renderPage()}
+        </main>
+      </div>
     </div>
   )
 }
