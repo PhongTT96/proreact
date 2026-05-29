@@ -1,6 +1,10 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import './App.css'
 import { Footer } from './components/Footer'
+import { PullToRefresh } from './components/PullToRefresh'
+import { runPullRefresh } from './lib/pullRefreshRegistry'
+
+const PULL_REFRESH_PAGES = new Set(['home', 'drive'])
 import { HomePage } from './pages/HomePage'
 import { DetailPage } from './pages/DetailPage'
 import { Electronics } from './pages/Electronics'
@@ -10,6 +14,10 @@ import { GoogleDrivePage } from './pages/GoogleDrivePage'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
+
+  const handlePullRefresh = useCallback(async () => {
+    await runPullRefresh(currentPage)
+  }, [currentPage])
 
   const renderPage = () => {
     switch (currentPage) {
@@ -34,7 +42,9 @@ function App() {
     <div className="app-wrapper">
       <div className="app-container">
         <main className="main-content">
-          {renderPage()}
+          <PullToRefresh onRefresh={handlePullRefresh} disabled={!PULL_REFRESH_PAGES.has(currentPage)}>
+            {renderPage()}
+          </PullToRefresh>
         </main>
       </div>
       <Footer currentPage={currentPage} onTabChange={setCurrentPage} />

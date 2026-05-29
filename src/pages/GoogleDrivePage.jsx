@@ -16,6 +16,7 @@ import {
   loadGoogleDriveSession,
   saveGoogleDriveSession,
 } from '../lib/googleDriveAuthStorage'
+import { registerPullRefresh, unregisterPullRefresh } from '../lib/pullRefreshRegistry'
 
 async function refreshFileList(accessToken) {
   return listDriveFiles(accessToken)
@@ -132,7 +133,7 @@ export function GoogleDrivePage({ onBack }) {
     setStatus('Đã đăng xuất Google và xóa phiên đã lưu.')
   }
 
-  const handleListFiles = async () => {
+  const handleListFiles = useCallback(async () => {
     if (!accessToken) {
       setStatus('Vui lòng đăng nhập Google trước.')
       return
@@ -148,7 +149,12 @@ export function GoogleDrivePage({ onBack }) {
     } finally {
       setListLoading(false)
     }
-  }
+  }, [accessToken])
+
+  useEffect(() => {
+    registerPullRefresh('drive', handleListFiles)
+    return () => unregisterPullRefresh('drive')
+  }, [handleListFiles])
 
   const handleOpenFile = async (file) => {
     if (!accessToken) return

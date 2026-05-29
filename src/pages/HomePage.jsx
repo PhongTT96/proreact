@@ -1,5 +1,6 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient'
+import { registerPullRefresh, unregisterPullRefresh } from '../lib/pullRefreshRegistry'
 
 export function HomePage() {
   const [status, setStatus] = useState(null)
@@ -92,6 +93,53 @@ export function HomePage() {
       setTableData2(data)
     }
   }
+
+  const handlePullRefresh = useCallback(async () => {
+    if (!isSupabaseConfigured()) {
+      setStatus('Chưa cấu hình Supabase.')
+      return
+    }
+
+    setFetchLoading(true)
+    try {
+      const { error: sessionError } = await supabase.auth.getSession()
+      if (sessionError) {
+        setStatus(`Lỗi Supabase: ${sessionError.message}`)
+        return
+      }
+
+      let refreshed = false
+
+      if (tableData !== null) {
+        const { data, error } = await supabase.from('test').select('*')
+        if (error) {
+          setStatus(`Làm mới lỗi (test): ${error.message}`)
+          return
+        }
+        setTableData(data)
+        refreshed = true
+      }
+
+      if (tableData2 !== null) {
+        const { data, error } = await supabase.from('test2').select('*')
+        if (error) {
+          setStatus(`Làm mới lỗi (test2): ${error.message}`)
+          return
+        }
+        setTableData2(data)
+        refreshed = true
+      }
+
+      setStatus(refreshed ? 'Đã làm mới dữ liệu Supabase.' : 'Đã làm mới trang chủ.')
+    } finally {
+      setFetchLoading(false)
+    }
+  }, [tableData, tableData2])
+
+  useEffect(() => {
+    registerPullRefresh('home', handlePullRefresh)
+    return () => unregisterPullRefresh('home')
+  }, [handlePullRefresh])
 
   return (
     <div className="App">
