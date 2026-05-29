@@ -17,6 +17,14 @@ import {
   saveGoogleDriveSession,
 } from '../lib/googleDriveAuthStorage'
 import { registerPullRefresh, unregisterPullRefresh } from '../lib/pullRefreshRegistry'
+import { formatGoogleOAuthError } from '../lib/googleOAuthErrors'
+import {
+  clearGoogleOAuthHash,
+  getGoogleRedirectUri,
+  markGoogleOAuthReturn,
+  parseGoogleOAuthHash,
+} from '../lib/googleOAuthRedirect'
+import { GoogleOAuthHelp } from '../components/GoogleOAuthHelp'
 
 async function refreshFileList(accessToken) {
   return listDriveFiles(accessToken)
@@ -73,14 +81,34 @@ export function GoogleDrivePage({ onBack }) {
     }
   }, [])
 
-  const login = useGoogleLogin({
+  const handleOAuthError = useCallback((error) => {
+    setSessionLoading(false)
+    setStatus(formatGoogleOAuthError(error))
+  }, [])
+
+  const loginPopup = useGoogleLogin({
     scope: GOOGLE_DRIVE_SCOPES,
+    ux_mode: 'popup',
+    prompt: 'consent',
     onSuccess: (tokenResponse) => completeLogin(tokenResponse),
-    onError: () => {
-      setSessionLoading(false)
-      setStatus('Đăng nhập Google thất bại. Kiểm tra Client ID và màn hình OAuth.')
-    },
+    onError: handleOAuthError,
+    onNonOAuthError: handleOAuthError,
   })
+
+  const loginRedirect = useGoogleLogin({
+    scope: GOOGLE_DRIVE_SCOPES,
+    ux_mode: 'redirect',
+    redirect_uri: getGoogleRedirectUri(),
+    prompt: 'consent',
+    onSuccess: (tokenResponse) => completeLogin(tokenResponse),
+    onError: handleOAuthError,
+    onNonOAuthError: handleOAuthError,
+  })
+
+  const startRedirectLogin = () => {
+    markGoogleOAuthReturn('drive')
+    loginRedirect()
+  }
 
   const silentLogin = useGoogleLogin({
     scope: GOOGLE_DRIVE_SCOPES,
@@ -99,6 +127,18 @@ export function GoogleDrivePage({ onBack }) {
     }
 
     restoreAttempted.current = true
+
+    const fromRedirect = parseGoogleOAuthHash()
+    if (fromRedirect?.error) {
+      clearGoogleOAuthHash()
+      handleOAuthError(fromRedirect)
+      return
+    }
+    if (fromRedirect?.access_token) {
+      clearGoogleOAuthHash()
+      void completeLogin(fromRedirect)
+      return
+    }
 
     const saved = loadGoogleDriveSession()
     if (saved?.accessToken) {
@@ -239,13 +279,7 @@ export function GoogleDrivePage({ onBack }) {
           </p>
         )}
 
-        {isGoogleDriveConfigured() && (
-          <p className="drive-hint">
-            Nếu không thấy file: bấm <strong>Đăng xuất</strong> rồi <strong>Đăng nhập</strong> lại
-            (đã đổi quyền xem toàn bộ Drive). Trên Google Cloud → OAuth consent screen → Data
-            access, thêm scope <code>drive.readonly</code> và <code>drive.file</code>.
-          </p>
-        )}
+        {isGoogleDriveConfigured() && !accessToken && <GoogleOAuthHelp />}
 
         <section className="drive-section">
           <h2>Đăng nhập</h2>
@@ -259,13 +293,24 @@ export function GoogleDrivePage({ onBack }) {
               </button>
             </>
           ) : (
-            <button
-              type="button"
-              onClick={() => login()}
-              disabled={!isGoogleDriveConfigured()}
-            >
-              Đăng nhập Google
-            </button>
+            <div className="drive-login-actions">
+              <button
+                type="button"
+                className="drive-login-primary"
+                onClick={startRedirectLogin}
+                disabled={!isGoogleDriveConfigured()}
+              >
+                Đăng nhập (mở trang Google)
+              </button>
+              <button
+                type="button"
+                className="drive-login-secondary"
+                onClick={() => loginPopup()}
+                disabled={!isGoogleDriveConfigured()}
+              >
+                Đăng nhập (cửa sổ popup)
+              </button>
+            </div>
           )}
         </section>
 

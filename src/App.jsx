@@ -3,8 +3,7 @@ import './App.css'
 import { Footer } from './components/Footer'
 import { PullToRefresh } from './components/PullToRefresh'
 import { runPullRefresh } from './lib/pullRefreshRegistry'
-
-const PULL_REFRESH_PAGES = new Set(['home', 'drive'])
+import { hasGoogleOAuthHash } from './lib/googleOAuthRedirect'
 import { HomePage } from './pages/HomePage'
 import { DetailPage } from './pages/DetailPage'
 import { Electronics } from './pages/Electronics'
@@ -12,8 +11,17 @@ import { Clothing } from './pages/Clothing'
 import { About } from './pages/About'
 import { GoogleDrivePage } from './pages/GoogleDrivePage'
 
+const PULL_REFRESH_PAGES = new Set(['home', 'drive'])
+
+function getInitialPage() {
+  if (typeof window !== 'undefined' && hasGoogleOAuthHash()) {
+    return sessionStorage.getItem('google_oauth_return_page') || 'drive'
+  }
+  return 'home'
+}
+
 function App() {
-  const [currentPage, setCurrentPage] = useState('home')
+  const [currentPage, setCurrentPage] = useState(getInitialPage)
 
   const handlePullRefresh = useCallback(async () => {
     await runPullRefresh(currentPage)

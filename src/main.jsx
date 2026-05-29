@@ -9,7 +9,7 @@ const googleClientId = getGoogleClientId()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={googleClientId}>
+    <GoogleOAuthProvider clientId={googleClientId} locale="vi">
       <App />
     </GoogleOAuthProvider>
   </StrictMode>,
