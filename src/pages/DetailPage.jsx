@@ -2,8 +2,8 @@ export function DetailPage({ onBack }) {
   return (
     <div className="App">
       <header className="page-header">
-        <button className="back-btn" onClick={onBack}>
-          ← Quay lại
+        <button className="back-btn" onClick={onBack} aria-label="Quay lại">
+          ←
         </button>
         <h1>Chi tiết trang</h1>
       </header>
