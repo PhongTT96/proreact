@@ -22,9 +22,10 @@ import {
   clearGoogleOAuthHash,
   getGoogleRedirectUri,
   markGoogleOAuthReturn,
-  parseGoogleOAuthHash,
+  parseGoogleOAuthCallback,
 } from '../lib/googleOAuthRedirect'
 import { GoogleOAuthHelp } from '../components/GoogleOAuthHelp'
+import { GoogleOAuthDiagnostics } from '../components/GoogleOAuthDiagnostics'
 
 async function refreshFileList(accessToken) {
   return listDriveFiles(accessToken)
@@ -89,7 +90,7 @@ export function GoogleDrivePage({ onBack }) {
   const loginPopup = useGoogleLogin({
     scope: GOOGLE_DRIVE_SCOPES,
     ux_mode: 'popup',
-    prompt: 'consent',
+    prompt: 'select_account',
     onSuccess: (tokenResponse) => completeLogin(tokenResponse),
     onError: handleOAuthError,
     onNonOAuthError: handleOAuthError,
@@ -99,7 +100,7 @@ export function GoogleDrivePage({ onBack }) {
     scope: GOOGLE_DRIVE_SCOPES,
     ux_mode: 'redirect',
     redirect_uri: getGoogleRedirectUri(),
-    prompt: 'consent',
+    prompt: 'select_account',
     onSuccess: (tokenResponse) => completeLogin(tokenResponse),
     onError: handleOAuthError,
     onNonOAuthError: handleOAuthError,
@@ -128,7 +129,7 @@ export function GoogleDrivePage({ onBack }) {
 
     restoreAttempted.current = true
 
-    const fromRedirect = parseGoogleOAuthHash()
+    const fromRedirect = parseGoogleOAuthCallback()
     if (fromRedirect?.error) {
       clearGoogleOAuthHash()
       handleOAuthError(fromRedirect)
@@ -279,7 +280,12 @@ export function GoogleDrivePage({ onBack }) {
           </p>
         )}
 
-        {isGoogleDriveConfigured() && !accessToken && <GoogleOAuthHelp />}
+        {isGoogleDriveConfigured() && !accessToken && (
+          <>
+            <GoogleOAuthHelp />
+            <GoogleOAuthDiagnostics />
+          </>
+        )}
 
         <section className="drive-section">
           <h2>Đăng nhập</h2>
@@ -390,7 +396,9 @@ export function GoogleDrivePage({ onBack }) {
 
         {status && (
           <section className="drive-section">
-            <p className="drive-status">{status}</p>
+            <p className={`drive-status ${/lỗi|chặn|thất bại|hủy|denied/i.test(status) ? 'drive-status-error' : ''}`}>
+              {status}
+            </p>
           </section>
         )}
       </main>

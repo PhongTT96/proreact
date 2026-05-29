@@ -1,3 +1,4 @@
+import { isFullDriveScopeEnabled } from '../lib/googleDriveClient'
 import { getGoogleRedirectUri } from '../lib/googleOAuthRedirect'
 
 export function GoogleOAuthHelp() {
@@ -5,25 +6,45 @@ export function GoogleOAuthHelp() {
 
   return (
     <div className="drive-oauth-help">
-      <p className="drive-oauth-help-title">App đang ở chế độ Testing — bị chặn 2 bước là bình thường</p>
+      <p className="drive-oauth-help-title">Sửa lỗi &quot;chặn quyền / lỗi ủy quyền&quot;</p>
       <ol className="drive-oauth-help-steps">
         <li>
-          Trên Google Cloud: <strong>OAuth consent screen</strong> → thêm email của bạn vào{' '}
-          <strong>Test users</strong>.
+          <strong>OAuth consent screen</strong> → <strong>Test users</strong> → thêm <em>đúng email</em>{' '}
+          Gmail bạn dùng đăng nhập.
         </li>
         <li>
-          <strong>Credentials</strong> → OAuth client Web → <strong>Authorized JavaScript origins</strong>:{' '}
+          <strong>Data access</strong> → Add scopes → chọn:
+          <ul>
+            <li>
+              <code>.../auth/drive.file</code>
+            </li>
+            <li>
+              <code>.../auth/drive.metadata.readonly</code>
+            </li>
+            {isFullDriveScopeEnabled() && (
+              <li>
+                <code>.../auth/drive.readonly</code> (restricted — cần verify app)
+              </li>
+            )}
+          </ul>
+        </li>
+        <li>
+          <strong>Credentials</strong> → OAuth <strong>Web</strong> client → origins + redirect (copy từ ô
+          Chẩn đoán):
+          <br />
           <code>{redirectUri}</code>
         </li>
         <li>
-          Thêm <strong>Authorized redirect URIs</strong> (cho nút mở trang Google):{' '}
-          <code>{redirectUri}</code>
+          Mở app bằng <code>http://localhost:5173</code> (khớp với Console, không lẫn port khác).
         </li>
         <li>
-          Khi Google báo <em>chưa xác minh ứng dụng</em>: <strong>Nâng cao</strong> →{' '}
-          <strong>Tiếp tục</strong> → <strong>Cho phép</strong> quyền Drive.
+          Màn Google &quot;chưa xác minh&quot;: <strong>Nâng cao</strong> → <strong>Tiếp tục</strong> →{' '}
+          <strong>Cho phép</strong>.
         </li>
-        <li>Hoàn tất xác minh 2 bước (SMS/app Google) nếu tài khoản bật 2FA.</li>
+        <li>
+          Nếu vẫn chặn: trong <code>.env</code> <strong>xóa</strong> dòng{' '}
+          <code>VITE_GOOGLE_USE_FULL_DRIVE=true</code> (nếu có), restart <code>npm run dev</code>.
+        </li>
       </ol>
     </div>
   )

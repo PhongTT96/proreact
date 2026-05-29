@@ -1,8 +1,21 @@
-// readonly: xem/đọc mọi file trên Drive | file: tạo/upload file mới
-export const GOOGLE_DRIVE_SCOPES = [
+// Mặc định dùng scope nhẹ (app Testing chưa verify — tránh bị chặn ủy quyền).
+// Bật full: .env → VITE_GOOGLE_USE_FULL_DRIVE=true + thêm scope trên Consent screen.
+const DRIVE_SCOPES_DEV = [
+  'https://www.googleapis.com/auth/drive.file',
+  'https://www.googleapis.com/auth/drive.metadata.readonly',
+].join(' ')
+
+const DRIVE_SCOPES_FULL = [
   'https://www.googleapis.com/auth/drive.readonly',
   'https://www.googleapis.com/auth/drive.file',
 ].join(' ')
+
+export const GOOGLE_DRIVE_SCOPES =
+  import.meta.env.VITE_GOOGLE_USE_FULL_DRIVE === 'true' ? DRIVE_SCOPES_FULL : DRIVE_SCOPES_DEV
+
+export function isFullDriveScopeEnabled() {
+  return import.meta.env.VITE_GOOGLE_USE_FULL_DRIVE === 'true'
+}
 
 export function isGoogleDriveConfigured() {
   return Boolean(import.meta.env.VITE_GOOGLE_CLIENT_ID)
