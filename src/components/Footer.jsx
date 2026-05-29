@@ -1,22 +1,34 @@
-export function Footer() {
+export function Footer({ currentPage, onTabChange }) {
   return (
     <footer className="app-footer">
       <nav className="footer-nav">
-        <button className="footer-nav-btn">
-          <span className="icon">🏠</span>
-          <span>Trang chủ</span>
+        <button
+          type="button"
+          className={`footer-nav-btn ${currentPage === 'home' ? 'active' : ''}`}
+          onClick={() => onTabChange('home')}
+        >
+          Trang chủ
         </button>
-        <button className="footer-nav-btn">
-          <span className="icon">🛍️</span>
-          <span>Sản phẩm</span>
+        <button
+          type="button"
+          className={`footer-nav-btn ${currentPage === 'Electronics' ? 'active' : ''}`}
+          onClick={() => onTabChange('Electronics')}
+        >
+          Điện tử
         </button>
-        <button className="footer-nav-btn">
-          <span className="icon">❤️</span>
-          <span>Yêu thích</span>
+        <button
+          type="button"
+          className={`footer-nav-btn ${currentPage === 'Clothing' ? 'active' : ''}`}
+          onClick={() => onTabChange('Clothing')}
+        >
+          Quần áo
         </button>
-        <button className="footer-nav-btn">
-          <span className="icon">👤</span>
-          <span>Tài khoản</span>
+        <button
+          type="button"
+          className={`footer-nav-btn ${currentPage === 'About' ? 'active' : ''}`}
+          onClick={() => onTabChange('About')}
+        >
+          Giới thiệu
         </button>
       </nav>
     </footer>

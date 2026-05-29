@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Header } from './components/Header'
 import { Footer } from './components/Footer'
-import { Menu } from './components/Menu'
-import { menuData } from './data/menus'
 import { HomePage } from './pages/HomePage'
 import { DetailPage } from './pages/DetailPage'
 import { Electronics } from './pages/Electronics'
@@ -32,14 +29,12 @@ function App() {
 
   return (
     <div className="app-wrapper">
-      <Header />
       <div className="app-container">
-        <Menu items={menuData} onMenuClick={setCurrentPage} />
         <main className="main-content">
           {renderPage()}
         </main>
       </div>
-      <Footer />
+      <Footer currentPage={currentPage} onTabChange={setCurrentPage} />
     </div>
   )
 }
