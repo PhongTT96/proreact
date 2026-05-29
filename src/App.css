@@ -3,6 +3,9 @@
   color: #333;
   background: #f2f2f7;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --footer-nav-height: 52px;
+  --content-footer-gap: 20px;
+  --footer-safe-area: calc(var(--footer-nav-height) + var(--content-footer-gap));
 }
 
 :root,
@@ -57,12 +60,13 @@ body,
   display: flex;
   flex-direction: column;
   width: 100%;
+  padding: 16px 16px 0;
+  box-sizing: border-box;
 }
 
 .main-content {
   min-height: auto;
   overflow: auto;
-  padding: 16px 16px 80px;
   max-width: 960px;
   width: min(100%, 960px);
   margin: 0 auto;
@@ -71,6 +75,8 @@ body,
   background: #ffffff;
   border-radius: 20px;
   padding: 20px;
+  padding-bottom: calc(20px + var(--content-footer-gap));
+  margin-bottom: var(--content-footer-gap);
   border: 1px solid rgba(0, 0, 0, 0.04);
 }
 
@@ -502,12 +508,15 @@ body,
   /* App layout - stack vertically */
   .app-wrapper {
     min-height: 100vh;
-    padding-bottom: 60px; /* reserve space for bottom nav */
+    padding-bottom: 0;
   }
 
   .app-container {
     flex-direction: column;
     flex: 1;
+    overflow-y: auto;
+    padding: 16px 16px var(--footer-safe-area);
+    box-sizing: border-box;
   }
 
   /* Header adjustments */
@@ -544,10 +553,9 @@ body,
     gap: 10px;
   }
 
-  /* Main content - add padding for header */
+  /* Main content - khoảng cách với footer cố định */
   .main-content {
-    padding-top: 0;
-    overflow-y: auto;
+    overflow-y: visible;
   }
 
   /* Menu styling adjustments for mobile */
@@ -612,13 +620,7 @@ body,
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    padding-bottom: 72px;
-  }
-
-  .app-container {
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 72px;
+    padding-bottom: 0;
   }
 }
 
@@ -676,11 +678,6 @@ body,
   .menu-button {
     padding: 10px 12px;
     font-size: 13px;
-  }
-
-  /* Footer adjustments for small phones */
-  .app-container {
-    padding-bottom: 60px;
   }
 
   .footer-nav-btn {
