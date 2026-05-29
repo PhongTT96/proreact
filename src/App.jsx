@@ -6,6 +6,7 @@ import { DetailPage } from './pages/DetailPage'
 import { Electronics } from './pages/Electronics'
 import { Clothing } from './pages/Clothing'
 import { About } from './pages/About'
+import { GoogleDrivePage } from './pages/GoogleDrivePage'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
@@ -20,6 +21,8 @@ function App() {
         return <Clothing onBack={() => setCurrentPage('home')} />
       case 'About':
         return <About onBack={() => setCurrentPage('home')} />
+      case 'drive':
+        return <GoogleDrivePage onBack={() => setCurrentPage('home')} />
       case 'detail':
         return <DetailPage onBack={() => setCurrentPage('home')} />
       default:

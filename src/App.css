@@ -489,6 +489,112 @@ button {
   background: rgba(0, 0, 0, 0.04);
 }
 
+/* Google Drive page */
+.drive-page .page-content {
+  text-align: left;
+}
+
+.drive-section {
+  margin-bottom: 28px;
+}
+
+.drive-section h2 {
+  font-size: 18px;
+  margin: 0 0 12px;
+  color: #111;
+}
+
+.drive-hint {
+  padding: 12px;
+  background: #f7f7f7;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.drive-label {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.drive-label input,
+.drive-label textarea {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font: inherit;
+  box-sizing: border-box;
+}
+
+.drive-list-hint {
+  margin: 0 0 12px;
+  font-size: 13px;
+  color: #666;
+}
+
+.drive-file-list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+}
+
+.drive-file-name {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.drive-file-loading {
+  font-size: 12px;
+  color: #666;
+}
+
+.drive-file-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.drive-file-btn.active {
+  border-color: var(--accent, #aa3bff);
+  background: var(--accent-bg, rgba(170, 59, 255, 0.1));
+}
+
+.drive-preview {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f7f7f7;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 13px;
+  max-height: 240px;
+  overflow: auto;
+}
+
+.drive-status {
+  padding: 12px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   /* Show hamburger button */
@@ -644,8 +750,8 @@ button {
   }
 
   .footer-nav-btn {
-    padding: 8px 10px;
-    font-size: 13px;
+    padding: 8px 6px;
+    font-size: 11px;
   }
 }
 

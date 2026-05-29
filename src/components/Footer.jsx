@@ -25,6 +25,13 @@ export function Footer({ currentPage, onTabChange }) {
         </button>
         <button
           type="button"
+          className={`footer-nav-btn ${currentPage === 'drive' ? 'active' : ''}`}
+          onClick={() => onTabChange('drive')}
+        >
+          Drive
+        </button>
+        <button
+          type="button"
           className={`footer-nav-btn ${currentPage === 'About' ? 'active' : ''}`}
           onClick={() => onTabChange('About')}
         >
