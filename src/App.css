@@ -12,6 +12,17 @@ body,
   height: 100%;
 }
 
+html {
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
   background: #f2f2f7;
@@ -54,12 +65,7 @@ body,
   padding: 16px 16px 80px;
   max-width: 100%;
   width: 100%;
-  margin: 0;
-}
-
-.main-content > .App {
-  background: #ffffff;
-  border-radius: 20px;
+  box-sizing: border-box;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
   padding: 20px;
   border: 1px solid rgba(0, 0, 0, 0.04);
